@@ -4,8 +4,4 @@
     <loc>https://konrieshop.github.io/</loc>
     <priority>1.0</priority>  
   </url>
-  <url>
-    <loc>https://konrieshop.github.io/index.html</loc>
-    <priority>1.0</priority>
-  </url>
 </urlset>
