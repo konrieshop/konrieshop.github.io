@@ -13,6 +13,12 @@
     <link rel="stylesheet" href="assets/css/LineIcons.2.0.css" />
     <link rel="stylesheet" href="assets/css/animate.css" />
     <link rel="stylesheet" href="assets/css/main.css" />
+	<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+	<script>
+	(function() {
+		emailjs.init('T4dSHrfXpZWPcFBPp'); // Reemplaza 'TU_USER_ID' con tu User ID de EmailJS
+	})();
+	</script>
   </head>
   <body>
 
@@ -56,6 +62,40 @@
       <!-- navbar area -->
     </header>
     <!-- ========================= header end ========================= -->
+
+		<!-- ========================= delivery-section start ========================= -->
+		
+		<script>
+			function obtenerDescuento() {
+			  const email = document.getElementById('userEmail').value;
+		  
+			  if (email) {
+				// Usar EmailJS para enviar el correo
+				emailjs
+				  .send('service_lwuno3t', 'template_hquay1h', {
+					user_email: email, // Asegúrate de que 'user_email' coincide con tu plantilla en EmailJS
+				  })
+				  .then(
+					function (response) {
+					  // Correo enviado correctamente
+					  alert(`¡Gracias por unirte, ${email}! Tu 30% de descuento se aplicará en tu primera compra.`);
+		  
+					  // Redirigir a la página de Google Play
+					  const playStoreUrl = "https://play.google.com/store"; // Reemplaza con el enlace real de tu app
+					  window.location.href = playStoreUrl;
+					},
+					function (error) {
+					  // Error al enviar el correo
+					  alert('Hubo un problema al enviar el correo. Por favor, intenta nuevamente.');
+					  console.error('Error al enviar el correo:', error);
+					}
+				  );
+			  } else {
+				alert('Por favor, ingresa un correo válido.');
+			  }
+			}
+		  </script>
+
 
     <!-- ========================= hero-section start ========================= -->
     <section id="home" class="hero-section">
@@ -205,25 +245,6 @@
 		</section>
 		<!-- ========================= about-section end ========================= -->
 
-		<!-- ========================= delivery-section start ========================= -->
-		
-		<script>
-			function obtenerDescuento() {
-				const email = document.getElementById('userEmail').value;
-		
-				if (email) {
-
-					const playStoreUrl = "https://play.google.com/store"; // Reemplaza con el enlace real de tu app
-
-					alert(`¡Gracias por unirte, ${email}! Tu 30% de descuento se aplicará en tu primera compra.`);
-
-					// Redirigir a la página de Google Play
-					window.location.href = playStoreUrl;
-				} else {
-					alert('Por favor, ingresa un correo válido.');
-				}
-			}
-		</script>
 
 
 		<!-- ========================= delivery-section end ========================= -->
