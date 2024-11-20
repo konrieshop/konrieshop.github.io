@@ -19,6 +19,83 @@
 		emailjs.init('T4dSHrfXpZWPcFBPp'); // Reemplaza 'TU_USER_ID' con tu User ID de EmailJS
 	})();
 	</script>
+
+<style>
+	#chatbox-button {
+	  position: fixed;
+	  bottom: 20px;
+	  right: 20px;
+	  background-color: #5e3370;
+	  color: white;
+	  border: none;
+	  border-radius: 50%;
+	  padding: 15px;
+	  cursor: pointer;
+	  z-index: 1000;
+	}
+
+	#chatbox-overlay {
+	  position: fixed;
+	  bottom: 20px;
+	  right: 20px;
+	  width: 300px;
+	  height: 600px;
+	  background-color: #fff;
+	  border-radius: 10px;
+	  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+	  display: none;
+	  z-index: 1001;
+	}
+
+	#chatbox-header {
+	  background-color: #5e3370;
+	  padding: 10px;
+	  border-top-left-radius: 10px;
+	  border-top-right-radius: 10px;
+	  color: white;
+	  text-align: center;
+	}
+
+	#chatbox-messages {
+	  padding: 10px;
+	  height: 300px;
+	  overflow-y: auto;
+	  border-bottom: 1px solid #5e3370;
+	}
+
+	#chatbox-input {
+	  display: flex;
+	  padding: 10px;
+	}
+
+	#chatbox-input input {
+	  flex: 1;
+	  padding: 5px;
+	}
+
+	#chatbox-input button {
+	  background-color: #5e3370;
+	  color: white;
+	  border: none;
+	  padding: 5px 10px;
+	  cursor: pointer;
+	}
+
+	#chatbox-suggestions {
+	  padding: 10px;
+	  border-top: 1px solid #5e3370;
+	}
+
+	#chatbox-suggestions button {
+	  background-color: #5e3370;
+	  color: white;
+	  border: none;
+	  padding: 5px;
+	  margin: 2px;
+	  cursor: pointer;
+	  width: calc(100% - 4px);
+	}
+  </style>
   </head>
   <body>
 
@@ -64,7 +141,118 @@
     <!-- ========================= header end ========================= -->
 
 		<!-- ========================= delivery-section start ========================= -->
-		
+	<!-- Floating Chatbox Button -->
+    <button id="chatbox-button">Chat</button>
+
+    <!-- Chatbox Overlay -->
+    <div id="chatbox-overlay">
+      <div id="chatbox-header">Asistente Konrie Shop
+        <button id="close-chatbox" style="float: right; background: none; border: none; color: white; cursor: pointer;">&times;</button>
+      </div>
+      <div id="chatbox-messages"></div>
+      <div id="chatbox-suggestions">
+        <button onclick="insertSuggestion('¿Cómo obtengo un descuento?')">¿Cómo obtengo un descuento?</button>
+        <button onclick="insertSuggestion('¿Realizan envíos internacionales?')">¿Realizan envíos internacionales?</button>
+        <button onclick="insertSuggestion('¿Qué productos ofrecen?')">¿Qué productos ofrecen?</button>
+        <button id="more-suggestions" onclick="showMoreSuggestions()">Más preguntas</button>
+      </div>
+      <div id="chatbox-input">
+        <input type="text" id="userMessage" placeholder="Escribe tu mensaje...">
+        <button onclick="sendMessage()">Enviar</button>
+      </div>
+    </div>
+
+    <script>
+      // Toggle the chatbox visibility
+      const chatboxButton = document.getElementById("chatbox-button");
+      const chatboxOverlay = document.getElementById("chatbox-overlay");
+      const closeChatboxButton = document.getElementById("close-chatbox");
+
+      chatboxButton.addEventListener("click", function() {
+        chatboxOverlay.style.display = "block";
+        chatboxButton.style.display = "none";
+      });
+
+      closeChatboxButton.addEventListener("click", function() {
+        chatboxOverlay.style.display = "none";
+        chatboxButton.style.display = "block";
+      });
+
+      // Handle chat messages
+      const chatboxMessages = document.getElementById("chatbox-messages");
+
+      function sendMessage() {
+        const userMessage = document.getElementById("userMessage").value;
+        if (userMessage.trim() === "") return;
+
+        appendMessage("Usuario", userMessage);
+        document.getElementById("userMessage").value = "";
+
+        // Simulate a response based on user message
+        setTimeout(() => {
+          const response = getChatbotResponse(userMessage);
+          appendMessage("Asistente", response);
+        }, 500);
+      }
+
+      function appendMessage(sender, message) {
+        const messageElement = document.createElement("div");
+        messageElement.innerHTML = `<strong>${sender}:</strong> ${message}`;
+        chatboxMessages.appendChild(messageElement);
+        chatboxMessages.scrollTop = chatboxMessages.scrollHeight;
+      }
+
+      // Simple function to handle predefined questions and responses
+      function getChatbotResponse(message) {
+        const lowerMessage = message.toLowerCase();
+        if (lowerMessage.includes("descuento")) {
+          return "Puedes obtener un 30% de descuento en tu primera compra registrándote en nuestra app.";
+        } else if (lowerMessage.includes("envío")) {
+          return "Realizamos envíos a todo el mundo. El tiempo de entrega puede variar dependiendo de tu ubicación.";
+        } else if (lowerMessage.includes("productos")) {
+          return "Ofrecemos una variedad de productos coreanos: moda, belleza, accesorios y más.";
+        } else if (lowerMessage.includes("devoluciones")) {
+          return "Puedes realizar devoluciones dentro de los 30 días posteriores a la compra.";
+        } else if (lowerMessage.includes("tiempo de entrega")) {
+          return "El tiempo de entrega depende de tu ubicación. Por lo general, toma de 5 a 15 días hábiles.";
+        } else if (lowerMessage.includes("formas de pago")) {
+          return "Aceptamos tarjetas de crédito, débito y pagos por plataformas como PayPal.";
+        } else {
+          return "No estoy seguro de la respuesta, pero nuestro equipo puede ayudarte si nos contactas a través de soporte.";
+        }
+      }
+
+      // Insert suggestion into input field
+      function insertSuggestion(suggestion) {
+        document.getElementById("userMessage").value = suggestion;
+      }
+
+      // Show more suggestions
+      function showMoreSuggestions() {
+        const suggestions = [
+          '¿Cómo puedo hacer una devolución?',
+          '¿Cuánto tarda el envío?',
+          '¿Qué formas de pago aceptan?',
+          '¿Tienen descuentos para estudiantes?',
+          '¿Cómo puedo rastrear mi pedido?',
+          '¿Dónde están ubicados?'
+        ];
+        const suggestionButtons = document.querySelectorAll('#chatbox-suggestions button:not(#more-suggestions)');
+        for (let i = 0; i < suggestionButtons.length; i++) {
+          const randomIndex = Math.floor(Math.random() * suggestions.length);
+          suggestionButtons[i].textContent = suggestions[randomIndex];
+          suggestionButtons[i].setAttribute('onclick', `insertSuggestion('${suggestions[randomIndex]}')`);
+          suggestions.splice(randomIndex, 1);
+        }
+      }
+    </script>
+
+    <!-- Existing scripts -->
+    <script src="assets/js/bootstrap.5.0.0.alpha-2-min.js"></script>
+    <script src="assets/js/count-up.min.js"></script>
+    <script src="assets/js/wow.min.js"></script>
+    <script src="assets/js/main.js"></script>
+
 		<script>
 			function obtenerDescuento() {
 			  const email = document.getElementById('userEmail').value;
@@ -425,9 +613,6 @@
     <!-- ========================= footer end ========================= -->
 
     <!-- ========================= scroll-top ========================= -->
-    <a href="#" class="scroll-top btn-hover">
-      <i class="lni lni-chevron-up"></i>
-    </a>
 
     <!-- ========================= JS here ========================= -->
     <script src="assets/js/bootstrap.5.0.0.alpha-2-min.js"></script>
@@ -436,6 +621,3 @@
     <script src="assets/js/main.js"></script>
   </body>
 </html>
-
-
-
